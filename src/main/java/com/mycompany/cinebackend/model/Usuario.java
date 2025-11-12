@@ -21,10 +21,9 @@ public class Usuario {
     private String nombre;
     private String correo;
     private String password;
-    private String rol; // cliente, admin, admin-sistema y anunciante
+    private String rol; // cliente, admin_cine, admin-sistema y anunciante
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cartera_id")
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private Cartera cartera;
 
     public int getId() {

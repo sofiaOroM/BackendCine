@@ -1,5 +1,6 @@
 package com.mycompany.cinebackend.service;
 
+import com.mycompany.cinebackend.model.Cartera;
 import com.mycompany.cinebackend.model.Usuario;
 import jakarta.persistence.*;
 import java.util.List;
@@ -19,7 +20,32 @@ public class UsuarioService {
     public void crear(Usuario u) {
         EntityManager em = emf.createEntityManager();
         try {
-            // Validar si el correo ya existe
+            TypedQuery<Usuario> q = em.createQuery(
+                    "SELECT u FROM Usuario u WHERE u.correo = :c", Usuario.class);
+            q.setParameter("c", u.getCorreo());
+
+            if (!q.getResultList().isEmpty()) {
+                throw new RuntimeException("El usuario ya existe");
+            }
+
+            em.getTransaction().begin();
+
+            Cartera cartera = new Cartera();
+            cartera.setSaldo(0);
+            cartera.setUsuario(u);
+            u.setCartera(cartera);
+
+            em.persist(u);
+
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    /*public void crear(Usuario u) {
+        EntityManager em = emf.createEntityManager();
+        try {
             TypedQuery<Usuario> q = em.createQuery(
                     "SELECT u FROM Usuario u WHERE u.correo = :c", Usuario.class);
             q.setParameter("c", u.getCorreo());
@@ -28,21 +54,22 @@ public class UsuarioService {
             }
 
             em.getTransaction().begin();
-            em.persist(u);
+            em.merge(u);
             em.getTransaction().commit();
         } finally {
             em.close();
         }
-    }
-
+    }*/
     public Usuario login(String correo, String password) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Usuario> q = em.createQuery(
-                    "SELECT u FROM Usuario u WHERE u.correo = :c AND u.password = :p", Usuario.class);
+            TypedQuery<Usuario> q = em.createQuery("SELECT u FROM Usuario u LEFT JOIN FETCH u.cartera WHERE u.correo = :c AND u.password = :p", Usuario.class);
             q.setParameter("c", correo);
             q.setParameter("p", password);
-            return q.getSingleResult();
+            Usuario usuario = q.getSingleResult();
+            // Limpiar la contraseña por seguridad
+            usuario.setPassword(null);
+            return usuario;
         } catch (NoResultException e) {
             return null;
         } finally {

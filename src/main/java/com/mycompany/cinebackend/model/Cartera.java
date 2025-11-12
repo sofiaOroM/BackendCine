@@ -22,8 +22,8 @@ public class Cartera {
     private double saldo;
 
     @OneToOne
-    @JoinColumn(name = "usuario_id")
-    @JsonbTransient 
+    @JoinColumn(name = "usuario_id", nullable = false)
+    @JsonbTransient
     private Usuario usuario;
 
     public int getId() {

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.cinebackend.config;
+/*package com.mycompany.cinebackend.config;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
@@ -13,7 +13,7 @@ import jakarta.ws.rs.ext.Provider;
  *
  * @author sofia
  */
-@Provider
+/*@Provider
 public class CorsFilter implements ContainerResponseFilter {
 
     @Override
@@ -26,4 +26,4 @@ public class CorsFilter implements ContainerResponseFilter {
         responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
         responseContext.getHeaders().add("Access-Control-Max-Age", "1209600");
     }
-}
+}*/
