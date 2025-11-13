@@ -1,21 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
-    <persistence-unit name="cinePU" transaction-type="RESOURCE_LOCAL">
-        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <class>com.cine.backend.model.Usuario</class>
-        <class>com.cine.backend.model.Anuncio</class>
-        <class>com.cine.backend.model.Cartera</class>
-        <class>com.cine.backend.model.Reporte</class>
-        <properties>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/cine"/>
-            <property name="jakarta.persistence.jdbc.user" value="root"/>
-            <property name="jakarta.persistence.jdbc.password" value="sofia2808"/>
-            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
-            <property name="eclipselink.logging.level" value="none"/>
-        </properties>
-    </persistence-unit>
-</persistence>-->
 <persistence xmlns="https://jakarta.ee/xml/ns/persistence"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
@@ -27,8 +10,6 @@
         <class>com.mycompany.cinebackend.model.Cartera</class>
         <class>com.cine.backend.model.Anuncio</class>
         <class>com.cine.backend.model.Reporte</class>
-
-
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>

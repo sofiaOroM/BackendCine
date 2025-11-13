@@ -4,7 +4,7 @@
  */
 package com.mycompany.cinebackend.service;
 
-import com.mycompany.cinebackend.model.Funcion;
+import com.mycompany.cinebackend.model.Sala;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -12,51 +12,50 @@ import java.util.List;
  *
  * @author sofia
  */
-public class FuncionService {
+public class SalaService {
 
     private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("cinePU");
 
-    public List<Funcion> listar() {
-        EntityManager em = emf.createEntityManager();
-        List<Funcion> lista = em.createQuery("SELECT f FROM Funcion f", Funcion.class).getResultList();
-        em.close();
-        return lista;
-
-    }
-
-    public Funcion obtener(int id) {
+    public List<Sala> listar() {
         EntityManager em = emf.createEntityManager();
         try {
-            return em.find(Funcion.class, id);
+            return em.createQuery("SELECT s FROM Sala s", Sala.class).getResultList();
         } finally {
             em.close();
         }
     }
 
-    public Funcion crear(Funcion funcion) {
+    public Sala obtener(int id) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.find(Sala.class, id);
+        } finally {
+            em.close();
+        }
+    }
+
+    public Sala crear(Sala sala) {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            em.persist(funcion);
+            em.persist(sala);
             em.getTransaction().commit();
-            return funcion;
+            return sala;
         } finally {
             em.close();
         }
     }
 
-    public Funcion actualizar(int id, Funcion nueva) {
+    public Sala actualizar(int id, Sala nueva) {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            Funcion existente = em.find(Funcion.class, id);
+            Sala existente = em.find(Sala.class, id);
             if (existente == null) {
-                throw new RuntimeException("Función no encontrada con ID: " + id);
+                throw new RuntimeException("Sala no encontrada con ID: " + id);
             }
-            existente.setFechaHora(nueva.getFechaHora());
-            existente.setPrecio(nueva.getPrecio());
-            existente.setPelicula(nueva.getPelicula());
-            existente.setSala(nueva.getSala());
+            existente.setNombre(nueva.getNombre());
+            existente.setCapacidad(nueva.getCapacidad());
             em.merge(existente);
             em.getTransaction().commit();
             return existente;
@@ -69,9 +68,9 @@ public class FuncionService {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            Funcion funcion = em.find(Funcion.class, id);
-            if (funcion != null) {
-                em.remove(funcion);
+            Sala sala = em.find(Sala.class, id);
+            if (sala != null) {
+                em.remove(sala);
             }
             em.getTransaction().commit();
         } finally {

@@ -6,6 +6,7 @@ package com.mycompany.cinebackend.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 /**
  *
  * @author sofia
@@ -16,13 +17,20 @@ public class Funcion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    private String pelicula;
-    private LocalDateTime fechaHora;
+    
+    @Column(nullable = false)
+    private OffsetDateTime fechaHora;
+    
+    @Column(nullable = false)
     private double precio;
+   
+    @ManyToOne
+    @JoinColumn(name = "pelicula_id")
+    private Pelicula pelicula;
 
     @ManyToOne
-    private Cine cine;
+    @JoinColumn(name = "sala_id")
+    private Sala sala;
 
     public int getId() {
         return id;
@@ -32,19 +40,11 @@ public class Funcion {
         this.id = id;
     }
 
-    public String getPelicula() {
-        return pelicula;
-    }
-
-    public void setPelicula(String pelicula) {
-        this.pelicula = pelicula;
-    }
-
-    public LocalDateTime getFechaHora() {
+    public OffsetDateTime getFechaHora() {
         return fechaHora;
     }
 
-    public void setFechaHora(LocalDateTime fechaHora) {
+    public void setFechaHora(OffsetDateTime fechaHora) {
         this.fechaHora = fechaHora;
     }
 
@@ -56,11 +56,19 @@ public class Funcion {
         this.precio = precio;
     }
 
-    public Cine getCine() {
-        return cine;
+    public Pelicula getPelicula() {
+        return pelicula;
     }
 
-    public void setCine(Cine cine) {
-        this.cine = cine;
+    public void setPelicula(Pelicula pelicula) {
+        this.pelicula = pelicula;
+    }
+
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
     }
 }

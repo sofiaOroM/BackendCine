@@ -33,17 +33,17 @@ public class PeliculaController {
     }
 
     @POST
-    public Pelicula crear(Pelicula p) {
-        service.crear(p);
-        return p;
+    public Pelicula crear(Pelicula pelicula) {
+        service.crear(pelicula);
+        return pelicula;
     }
 
     @PUT
     @Path("/{id}")
-    public Pelicula actualizar(@PathParam("id") int id, Pelicula p) {
-        p.setId(id);
-        service.actualizar(p);
-        return p;
+    public Pelicula actualizar(@PathParam("id") int id, Pelicula pelicula) {
+        pelicula.setId(id);
+        service.actualizar(pelicula);
+        return pelicula;
     }
 
     @DELETE
