@@ -6,10 +6,14 @@
              version="3.0">
 
     <persistence-unit name="cinePU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>com.mycompany.cinebackend.model.Usuario</class>
+        <class>com.mycompany.cinebackend.model.Pelicula</class>
         <class>com.mycompany.cinebackend.model.Cartera</class>
         <class>com.cine.backend.model.Anuncio</class>
         <class>com.cine.backend.model.Reporte</class>
+        <class>com.mycompany.cinebackend.model.ComentarioPelicula</class>
+        <class>com.mycompany.cinebackend.model.ComentarioSala</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>

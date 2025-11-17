@@ -8,7 +8,7 @@
             30
         </session-timeout>
     </session-config>
-    
+
     <filter>
         <filter-name>CorsFilter</filter-name>
         <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
