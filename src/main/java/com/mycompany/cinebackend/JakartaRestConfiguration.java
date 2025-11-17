@@ -1,6 +1,5 @@
 package com.mycompany.cinebackend;
 
-//import com.mycompany.cinebackend.config.CorsFilter;
 import jakarta.ws.rs.ApplicationPath;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -19,10 +18,14 @@ import org.glassfish.jersey.server.ResourceConfig;
 public class JakartaRestConfiguration extends ResourceConfig {
 
     public JakartaRestConfiguration() {
-        packages("com.mycompany.cinebackend.controller").register(MultiPartFeature.class);
+        packages("com.mycompany.cinebackend.controller", "com.mycompany.cinebackend.service").register(MultiPartFeature.class);
+        register(MultiPartFeature.class);
+        register(new AppBinder());
+    }
+}
+
+
 //        register(com.mycompany.cinebackend.config.CorsFilter.class);
 
         // Registrar soporte para envío de archivos (multipart/form-data)
- //       register(MultiPartFeature.class);
-    }
-}
+ //  
