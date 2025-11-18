@@ -5,11 +5,12 @@
 package com.mycompany.cinebackend.controller;
 
 import com.mycompany.cinebackend.model.Anuncio;
+import com.mycompany.cinebackend.model.Usuario;
 import com.mycompany.cinebackend.service.AnuncioService;
+import com.mycompany.cinebackend.service.UsuarioService;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
-
 /**
  *
  * @author sofia
@@ -20,15 +21,30 @@ import java.util.List;
 public class AnuncioController {
 
     private final AnuncioService service = new AnuncioService();
+    private final UsuarioService usuarioService = new UsuarioService();
 
     @POST
-    public void crear(Anuncio a) {
-        service.crear(a);
+    @Path("/crear")
+    public void crear(Anuncio anuncio) {
+        Usuario usuario = usuarioService.buscarPorId(anuncio.getOwnerId());
+        if (usuario == null) {
+            throw new RuntimeException("Usuario no encontrado");
+        }
+
+        anuncio.setUsuario(usuario);
+        service.crear(anuncio);
     }
 
     @GET
+    @Path("/listar")
     public List<Anuncio> listar() {
         return service.listar();
+    }
+
+    @GET
+    @Path("/usuario/{usuarioId}")
+    public List<Anuncio> obtenerAnunciosPorUsuario(@PathParam("usuarioId") int usuarioId) {
+        return service.listarAnunciosPorUsuario(usuarioId);
     }
 
     @DELETE

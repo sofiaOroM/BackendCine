@@ -43,23 +43,6 @@ public class UsuarioService {
         }
     }
 
-    /*public void crear(Usuario u) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            TypedQuery<Usuario> q = em.createQuery(
-                    "SELECT u FROM Usuario u WHERE u.correo = :c", Usuario.class);
-            q.setParameter("c", u.getCorreo());
-            if (!q.getResultList().isEmpty()) {
-                throw new RuntimeException("El usuario ya existe");
-            }
-
-            em.getTransaction().begin();
-            em.merge(u);
-            em.getTransaction().commit();
-        } finally {
-            em.close();
-        }
-    }*/
     public Usuario login(String correo, String password) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -77,7 +60,7 @@ public class UsuarioService {
         }
     }
 
-    public Usuario actualizar(int id, Usuario updated) {
+    /*public Usuario actualizar(int id, Usuario updated) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         Usuario u = em.find(Usuario.class, id);
@@ -90,6 +73,34 @@ public class UsuarioService {
         em.getTransaction().commit();
         em.close();
         return u;
+    }*/
+    
+    public Usuario actualizarUsuario(Usuario u) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+        try {
+            tx.begin();
+            Usuario actualizado = em.merge(u);
+            tx.commit();
+            return actualizado;
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    public Usuario buscarPorId(int id) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.find(Usuario.class, id);
+        } finally {
+            em.close();
+        }
     }
 
     public List<Usuario> listar() {
