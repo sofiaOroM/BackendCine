@@ -2,6 +2,7 @@ package com.mycompany.cinebackend.service;
 
 import com.mycompany.cinebackend.model.Cartera;
 import com.mycompany.cinebackend.model.Usuario;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -27,6 +28,8 @@ public class UsuarioService {
             if (!q.getResultList().isEmpty()) {
                 throw new RuntimeException("El usuario ya existe");
             }
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            u.setPassword(encoder.encode(u.getPassword()));
 
             em.getTransaction().begin();
 
@@ -46,13 +49,24 @@ public class UsuarioService {
     public Usuario login(String correo, String password) {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Usuario> q = em.createQuery("SELECT u FROM Usuario u LEFT JOIN FETCH u.cartera WHERE u.correo = :c AND u.password = :p", Usuario.class);
+            TypedQuery<Usuario> q = em.createQuery(
+                    "SELECT u FROM Usuario u LEFT JOIN FETCH u.cartera WHERE u.correo = :c",
+                    Usuario.class
+            );
             q.setParameter("c", correo);
-            q.setParameter("p", password);
+
             Usuario usuario = q.getSingleResult();
-            // Limpiar la contraseña por seguridad
+
+            //Validar la contraseña usando BCrypt
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+            if (!encoder.matches(password, usuario.getPassword())) {
+                return null; // contraseña incorrecta
+            }
+
             usuario.setPassword(null);
             return usuario;
+
         } catch (NoResultException e) {
             return null;
         } finally {
@@ -60,21 +74,6 @@ public class UsuarioService {
         }
     }
 
-    /*public Usuario actualizar(int id, Usuario updated) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        Usuario u = em.find(Usuario.class, id);
-        if (u != null) {
-            u.setNombre(updated.getNombre() != null ? updated.getNombre() : u.getNombre());
-            u.setCorreo(updated.getCorreo() != null ? updated.getCorreo() : u.getCorreo());
-            u.setPassword(updated.getPassword() != null ? updated.getPassword() : u.getPassword());
-            u.setRol(updated.getRol() != null ? updated.getRol() : u.getRol());
-        }
-        em.getTransaction().commit();
-        em.close();
-        return u;
-    }*/
-    
     public Usuario actualizarUsuario(Usuario u) {
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
