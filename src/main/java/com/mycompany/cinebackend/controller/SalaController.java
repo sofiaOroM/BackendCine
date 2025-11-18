@@ -4,6 +4,7 @@
  */
 package com.mycompany.cinebackend.controller;
 
+import com.mycompany.cinebackend.model.Cine;
 import com.mycompany.cinebackend.model.Sala;
 import com.mycompany.cinebackend.service.SalaService;
 import jakarta.ws.rs.*;
@@ -74,4 +75,3 @@ public class SalaController {
         }
     }
 }
-

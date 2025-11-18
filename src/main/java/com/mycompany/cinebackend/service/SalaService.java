@@ -25,6 +25,14 @@ public class SalaService {
         }
     }
 
+    public List<Sala> obtenerPorCine(int cineId) {
+        EntityManager em = emf.createEntityManager();
+        return em.createQuery(
+                "SELECT s FROM Sala s WHERE s.cine.id = :cineId", Sala.class
+        ).setParameter("cineId", cineId)
+                .getResultList();
+    }
+
     public Sala obtener(int id) {
         EntityManager em = emf.createEntityManager();
         try {
