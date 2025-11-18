@@ -6,11 +6,8 @@ package com.mycompany.cinebackend.controller;
 
 import com.mycompany.cinebackend.model.ComentarioSala;
 import com.mycompany.cinebackend.service.ComentarioSalaService;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import java.util.List;
-
+import jakarta.ws.rs.core.*;
 
 /**
  *
@@ -19,27 +16,35 @@ import java.util.List;
 @Path("/comentarios/sala")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-
 public class ComentarioSalaController {
 
-    @Inject
-    private ComentarioSalaService service;
+    private final ComentarioSalaService comentarioService = new ComentarioSalaService();
 
     @POST
     @Path("/crear")
-    public void crear(ComentarioSala comentario) {
-        service.crear(comentario);
+    public Response crearComentario(ComentarioSala comentario) {
+        try {
+            comentarioService.crearComentario(comentario);
+            return Response.status(Response.Status.CREATED).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build();
+        }
     }
 
     @GET
     @Path("/{idSala}")
-    public List<ComentarioSala> listarPorSala(@PathParam("idSala") Long idSala) {
-        return service.listarPorSala(idSala);
+    public Response obtenerComentarios(@PathParam("idSala") int idSala) {
+        return Response.ok(
+                comentarioService.listarComentariosPorSala(idSala)
+        ).build();
     }
 
     @GET
     @Path("/{idSala}/promedio")
-    public double promedio(@PathParam("idSala") Long idSala) {
-        return service.promedioCalificacion(idSala);
+    public Response obtenerPromedio(@PathParam("idSala") int idSala) {
+        double promedio = comentarioService.obtenerPromedioPorSala(idSala);
+        return Response.ok(promedio).build();
     }
 }

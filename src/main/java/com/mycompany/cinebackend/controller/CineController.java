@@ -5,10 +5,13 @@
 package com.mycompany.cinebackend.controller;
 
 import com.mycompany.cinebackend.model.Cine;
+import com.mycompany.cinebackend.model.Sala;
 import com.mycompany.cinebackend.service.CineService;
+import com.mycompany.cinebackend.service.SalaService;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
 
 /**
  *
@@ -20,6 +23,7 @@ import jakarta.ws.rs.core.Response;
 public class CineController {
 
     private CineService cineService = new CineService();
+    private final SalaService salaService = new SalaService();
 
     @GET
     public Response listar() {
@@ -71,5 +75,11 @@ public class CineController {
             return Response.ok().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    @GET
+    @Path("/{id}/salas")
+    public List<Sala> obtenerSalasPorCine(@PathParam("id") int id) {
+        return salaService.obtenerPorCine(id);
     }
 }

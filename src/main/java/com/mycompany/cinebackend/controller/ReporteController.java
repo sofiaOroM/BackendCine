@@ -1,103 +1,123 @@
 package com.mycompany.cinebackend.controller;
 
 import com.mycompany.cinebackend.service.ReporteService;
+import com.mycompany.cinebackend.service.FiltroReporte;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.*;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.StreamingOutput;
 import net.sf.jasperreports.engine.JRException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
+import java.time.LocalDate;
 
 @Path("/reportes")
-@Produces(MediaType.APPLICATION_OCTET_STREAM)
 public class ReporteController {
 
     private final ReporteService reporteService = new ReporteService();
 
-    @GET
-    @Path("/ganancias/pdf")
-    public Response generarGananciasPdf(@QueryParam("desde") String desdeStr, @QueryParam("hasta") String hastaStr) {
+    private Response generarPdf(FiltroReporte filtro, String tipoReporte) {
         try {
-            Date desde = null;
-            Date hasta = null;
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            if (desdeStr != null && !desdeStr.isEmpty()) desde = sdf.parse(desdeStr);
-            if (hastaStr != null && !hastaStr.isEmpty()) hasta = sdf.parse(hastaStr);
+            byte[] pdfBytes;
 
-            byte[] pdf = reporteService.generarReporteGanancias(desde, hasta);
+            switch (tipoReporte) {
+                case "comentarios":
+                    pdfBytes = reporteService.reporteComentarios(filtro);
+                    break;
+                case "peliculas":
+                    pdfBytes = reporteService.reportePeliculas(filtro);
+                    break;
+                case "top-salas":
+                    pdfBytes = reporteService.reporteTopSalas(filtro);
+                    break;
+                case "boletos":
+                    pdfBytes = reporteService.reporteBoletos(filtro);
+                    break;
+                default:
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity("Tipo de reporte inválido")
+                            .build();
+            }
 
-            return Response.ok(pdf)
-                    .header("Content-Disposition", "attachment; filename=report_ganancias.pdf")
-                    .type("application/pdf")
+            StreamingOutput fileStream = output -> {
+                output.write(pdfBytes);
+                output.flush();
+            };
+
+            return Response
+                    .ok(fileStream, "application/pdf")
+                    .header("Content-Disposition", "attachment; filename=\"" + tipoReporte + ".pdf\"")
                     .build();
 
         } catch (JRException e) {
-            e.printStackTrace();
-            return Response.serverError().entity("Error generando reporte JR: " + e.getMessage()).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.serverError().entity("Error: " + e.getMessage()).build();
-        }
-    }
-}
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-/*package com.mycompany.cinebackend.controller;
-
-import com.mycompany.cinebackend.model.Reporte;
-import com.mycompany.cinebackend.service.ReporteService;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import java.util.List;
-import java.util.Map;
-import static org.glassfish.jersey.internal.inject.Bindings.service;
-
-/**
- *
- * @author sofia
- */
-/*@Path("/reportes")
-@Produces(MediaType.APPLICATION_JSON)
-public class ReporteController {
-
-    @Inject
-    private ReporteService reporteService;
-
-    @GET
-    @Path("/comentarios/pelicula/{id}")
-    @Produces("application/pdf")
-    public Response generarReporte(@PathParam("id") int id) {
-        try {
-            byte[] pdf = reporteService.generarReporteComentariosPelicula(id);
-
-            return Response.ok(pdf)
-                    .header("Content-Disposition", "attachment; filename=comentarios_pelicula.pdf")
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error generando el reporte: " + e.getMessage())
                     .build();
         } catch (Exception e) {
-            e.printStackTrace();
-            return Response.status(500).entity("Error: " + e.getMessage()).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error inesperado: " + e.getMessage())
+                    .build();
         }
     }
 
-    /*@GET
-    @Path("/ganancias")
-    public Map<String, Double> reporteGanancias() {
-        return service.obtenerGananciasTotales();
+    private FiltroReporte crearFiltro(String fechaInicio, String fechaFin, Long salaId) {
+        FiltroReporte filtro = new FiltroReporte();
+
+        if (fechaInicio != null && !fechaInicio.isEmpty()) {
+            filtro.setFechaInicio(LocalDate.parse(fechaInicio));
+        }
+
+        if (fechaFin != null && !fechaFin.isEmpty()) {
+            filtro.setFechaFin(LocalDate.parse(fechaFin));
+        }
+
+        filtro.setSalaId(salaId); // puede ser null
+        return filtro;
     }
 
     @GET
-    @Path("/anuncios")
-    public Map<String, Long> reporteAnunciosActivosInactivos() {
-        return service.obtenerConteoAnuncios();
+    @Path("/comentarios")
+    @Produces("application/pdf")
+    public Response reporteComentarios(
+            @QueryParam("fechaInicio") String fechaInicio,
+            @QueryParam("fechaFin") String fechaFin,
+            @QueryParam("salaId") Long salaId) {
+
+        FiltroReporte filtro = crearFiltro(fechaInicio, fechaFin, salaId);
+        return generarPdf(filtro, "comentarios");
     }
 
     @GET
-    @Path("/ganancias-anunciantes")
-    public Map<String, Double> reporteGananciasPorAnunciante() {
-        return service.obtenerGananciasPorAnunciante();
+    @Path("/peliculas")
+    @Produces("application/pdf")
+    public Response reportePeliculas(
+            @QueryParam("fechaInicio") String fechaInicio,
+            @QueryParam("fechaFin") String fechaFin,
+            @QueryParam("salaId") Long salaId) {
+
+        FiltroReporte filtro = crearFiltro(fechaInicio, fechaFin, salaId);
+        return generarPdf(filtro, "peliculas");
     }
-}*/
+
+    @GET
+    @Path("/top-salas")
+    @Produces("application/pdf")
+    public Response reporteTopSalas(
+            @QueryParam("fechaInicio") String fechaInicio,
+            @QueryParam("fechaFin") String fechaFin,
+            @QueryParam("salaId") Long salaId) {
+
+        FiltroReporte filtro = crearFiltro(fechaInicio, fechaFin, salaId);
+        return generarPdf(filtro, "top-salas");
+    }
+
+    @GET
+    @Path("/boletos")
+    @Produces("application/pdf")
+    public Response reporteBoletos(
+            @QueryParam("fechaInicio") String fechaInicio,
+            @QueryParam("fechaFin") String fechaFin,
+            @QueryParam("salaId") Long salaId) {
+
+        FiltroReporte filtro = crearFiltro(fechaInicio, fechaFin, salaId);
+        return generarPdf(filtro, "boletos");
+    }
+}
