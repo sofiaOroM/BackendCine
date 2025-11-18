@@ -1,0 +1,61 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="comentarios_pelicula" language="java" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" uuid="e9bb1a27-f975-4aa4-98f9-75524c5daafa">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="Title" fontName="Arial" fontSize="26.0" bold="true"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18.0"/>
+	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12.0" bold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12.0"/>
+	<query language="sql"><![CDATA[]]></query>
+	<background height="822" splitType="Stretch">
+		<element kind="image" uuid="6be67a9c-1fb8-44ea-93c5-22c7de2c74ad" positionType="Float" mode="Transparent" x="-20" y="313" width="105" height="409" vImageAlign="Bottom">
+			<expression><![CDATA["waves.jpg"]]></expression>
+		</element>
+		<element kind="frame" uuid="58048a65-569d-454e-b6dd-f3bb46c94ee3" mode="Opaque" x="-20" y="722" width="105" height="100" forecolor="#666666" backcolor="#666666">
+			<element kind="textField" uuid="0f40ce36-78f2-49e5-adf5-8855d6516e74" x="0" y="0" width="104" height="73" forecolor="#000000" fontSize="58.0" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Column header">
+				<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+			</element>
+			<element kind="textField" uuid="e06a687c-0f3f-4451-a45e-f88c505ba589" x="0" y="77" width="104" height="20" forecolor="#000000" fontSize="16.0" evaluationTime="Report" bold="false" hTextAlign="Center" style="Column header">
+				<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+				<box leftPadding="4" rightPadding="4" style="Column header"/>
+			</element>
+			<element kind="line" uuid="ab96a4b0-8a0d-4ae2-8695-16868926ec2b" mode="Transparent" x="42" y="73" width="20" height="1"/>
+			<box>
+				<pen lineWidth="0.0"/>
+				<topPen lineWidth="0.0"/>
+				<leftPen lineWidth="0.0"/>
+				<bottomPen lineWidth="0.0"/>
+				<rightPen lineWidth="0.0"/>
+			</box>
+		</element>
+	</background>
+	<title height="152" splitType="Stretch">
+		<element kind="staticText" uuid="524767a9-e7e5-4041-9b08-5a7210b38e22" x="0" y="0" width="555" height="115" fontSize="54.0" bold="false" hTextAlign="Right" vTextAlign="Middle" style="Title">
+			<text><![CDATA[WAVES TITLE]]></text>
+		</element>
+		<element kind="staticText" uuid="bd605e96-6228-492c-9dd6-f33258081a5a" x="234" y="115" width="321" height="37" fontSize="26.0" hTextAlign="Right" style="SubTitle">
+			<text><![CDATA[Waves SubTitle]]></text>
+		</element>
+	</title>
+	<pageHeader splitType="Stretch"/>
+	<columnHeader height="25" splitType="Stretch">
+		<element kind="frame" uuid="eb0fefed-b830-492b-a0c9-ec23411537a7" mode="Opaque" x="97" y="5" width="458" height="20" backcolor="#666666"/>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<element kind="frame" uuid="5d75be3e-ea39-4b96-baf8-b49497315044" x="97" y="1" width="458" height="15"/>
+			<element kind="line" uuid="2b97af27-2a1e-491f-a0f4-b2549a3510ee" positionType="FixRelativeToBottom" x="97" y="16" width="458" height="1">
+				<pen lineWidth="0.5" lineColor="#999999"/>
+			</element>
+		</band>
+	</detail>
+	<columnFooter splitType="Stretch"/>
+	<pageFooter height="100" splitType="Stretch">
+		<element kind="textField" uuid="f8570c2f-4404-4725-885a-4eb3c26abb4a" x="424" y="0" width="131" height="20" forecolor="#000000" fontSize="12.0" pattern="EEEEE dd MMMMM yyyy" bold="false" hTextAlign="Right" style="Column header">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+		<element kind="staticText" uuid="fce324aa-31f5-453a-a957-28bc6f740c75" x="96" y="0" width="267" height="20" forecolor="#000000" fontSize="12.0" bold="false" style="Column header">
+			<text><![CDATA[Waves Title Report]]></text>
+		</element>
+	</pageFooter>
+	<summary splitType="Stretch"/>
+</jasperReport>

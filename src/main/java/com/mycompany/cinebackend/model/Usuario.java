@@ -25,6 +25,10 @@ public class Usuario {
 
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private Cartera cartera;
+    
+    @ManyToOne
+    @JoinColumn(name = "cine_id")
+    private Cine cine;
 
     public int getId() {
         return id;
@@ -74,4 +78,11 @@ public class Usuario {
         this.cartera = cartera;
     }
 
+    public Cine getCine() {
+        return cine;
+    }
+
+    public void setCine(Cine cine) {
+        this.cine = cine;
+    }
 }

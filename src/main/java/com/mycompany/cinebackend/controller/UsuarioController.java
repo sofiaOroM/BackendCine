@@ -86,7 +86,7 @@ public class UsuarioController {
         return Response.ok(user).build();
     }
 
-    @PUT
+    /*@PUT
     @Path("/{id}")
     public Response actualizar(@PathParam("id") int id, Usuario updated) {
         Usuario u = service.actualizar(id, updated);
@@ -94,6 +94,33 @@ public class UsuarioController {
             return Response.ok(u).build();
         }
         return Response.status(Response.Status.NOT_FOUND).entity("Usuario no encontrado").build();
+    }*/
+    @PUT
+    @Path("/{id}")
+    public Response actualizarUsuario(@PathParam("id") int id, Usuario datos) {
+        try {
+            Usuario u = service.buscarPorId(id);
+            if (u == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
+            u.setNombre(datos.getNombre());
+            u.setCorreo(datos.getCorreo());
+            u.setRol(datos.getRol());
+
+            if ("anunciante".equalsIgnoreCase(datos.getRol())) {
+                u.setCine(datos.getCine());
+            } else {
+                u.setCine(null);
+            }
+
+            Usuario actualizado = service.actualizarUsuario(u);
+            return Response.ok(actualizado).build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.serverError().entity(e.getMessage()).build();
+        }
     }
 
     @GET
